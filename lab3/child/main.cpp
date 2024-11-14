@@ -9,6 +9,24 @@
 #include <sys/stat.h>        /* For mode constants */
 #include <semaphore.h>
 
+void syncWithMemory(std::ostringstream &oss, SharedData* shared1, sem_t* semaphore) {
+    auto length = oss.view().size();
+    if (length > SHARED_STR_SIZE)
+    {
+        perror("Too long output");
+        sem_close(semaphore);
+        exit(1);
+    }
+
+    auto charPtr = oss.view().data();
+    strcpy(shared1->data, charPtr);
+    shared1->size = length;
+    shared1->done = true;
+    msync(shared1, sizeof(SharedData), MS_SYNC);
+
+    sem_post(semaphore);
+}
+
 int main() {
     int fd1 = open(MAPPED_FILE1, O_RDWR);
     SharedData* shared1 = (SharedData*)mmap(nullptr, sizeof(SharedData),
@@ -32,8 +50,11 @@ int main() {
         while (std::cin.peek() != '\n') {
             float divider;
             std::cin >> divider;
-            if (divider == 0)
+            if (divider == 0) {
+                syncWithMemory(oss, shared1, semaphore);
+                sem_close(semaphore);
                 return 1;
+            }
 
             result /= divider;
         }
@@ -41,22 +62,7 @@ int main() {
         oss << result << "\n";
     }
 
-    auto length = oss.view().size();
-    if (length > SHARED_STR_SIZE)
-    {
-        perror("Too long output");
-        sem_close(semaphore);
-        return 1;
-    }
-
-    auto charPtr = oss.view().data();
-    strcpy(shared1->data, charPtr);
-    shared1->size = length;
-    shared1->done = true;
-    msync(shared1, sizeof(SharedData), MS_SYNC);
-
-    sem_post(semaphore);
+    syncWithMemory(oss, shared1, semaphore);
     sem_close(semaphore);
-
     return 0;
 }

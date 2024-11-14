@@ -39,6 +39,7 @@ int main() {
     shared1->size = 0;
     shared1->done = false;
 
+    sem_unlink(SEMAPHORE_NAME);
     sem_t* semaphore = sem_open(SEMAPHORE_NAME, O_CREAT | O_EXCL, 0666, 0);
     if (semaphore == SEM_FAILED)
     {
