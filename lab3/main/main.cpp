@@ -32,22 +32,12 @@ int main() {
                                             PROT_READ | PROT_WRITE,
                                             MAP_SHARED, fd1, 0);
     if (shared1 == MAP_FAILED) {
-        perror("Error mapping files");
+        std::cerr << "Error mapping files" << std::endl;
         exit(1);
     }
 
     shared1->size = 0;
     shared1->done = false;
-
-    sem_unlink(SEMAPHORE_NAME);
-    sem_t* semaphore = sem_open(SEMAPHORE_NAME, O_CREAT | O_EXCL, 0666, 0);
-    if (semaphore == SEM_FAILED)
-    {
-        std::cerr << "Ошибка открытия семафора" << std::endl;
-        munmap(shared1, sizeof(SharedData));
-        close(fd1);
-        exit(1);
-    }
 
     // Первой строчкой пользователь в консоль родительского процесса вводит имя файла,
     // которое будет использовано для открытия файла с таким именем на чтение
@@ -59,7 +49,6 @@ int main() {
     const pid_t pid = fork();
     if (pid == -1) {
         std::cerr << "ERROR: Error while creating child process" << std::endl;
-        sem_close(semaphore);
         munmap(shared1, sizeof(SharedData));
         close(fd1);
         return 1;
@@ -77,25 +66,24 @@ int main() {
         return 1;
     }
 
-    // Родительский процесс читает из pipe1 и прочитанное выводит в свой стандартный поток вывода.
-    sem_wait(semaphore);
-    std::string_view output(shared1->data);
-    std::cout << output;
-
+    // Родительский процесс ждёт завершение дочернего и выводит содержимое общей памяти в свой стандартный поток вывода.
     int status;
-    waitpid(pid, &status, 0);
+    if (waitpid(pid, &status, 0) == -1) {
+        std::cerr << "Can't get status of child process" << std::endl;
+        return 1;
+    }
+
+    std::string_view output(shared1->data);
+    std::cout << output << std::endl;
+
     if (WIFEXITED(status) && WEXITSTATUS(status) == 1) {
-        std::cerr << "ERROR: Division by zero" << std::endl;
+        std::cout << "ERROR: Division by zero" << std::endl;
         munmap(shared1, sizeof(SharedData));
         close(fd1);
-        sem_close(semaphore);
         return 1;
     }
 
     munmap(shared1, sizeof(SharedData));
     close(fd1);
-
-    sem_close(semaphore);
-    sem_unlink(SEMAPHORE_NAME);
     return 0;
 }

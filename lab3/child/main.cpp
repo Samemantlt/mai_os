@@ -1,20 +1,15 @@
 #include <iostream>
-#include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <sstream>
 #include <cstring>
 #include "../main/common.h"
-#include <pthread.h>
-#include <sys/stat.h>        /* For mode constants */
-#include <semaphore.h>
 
-void syncWithMemory(std::ostringstream &oss, SharedData* shared1, sem_t* semaphore) {
+void syncWithMemory(std::ostringstream &oss, SharedData* shared1) {
     auto length = oss.view().size();
     if (length > SHARED_STR_SIZE)
     {
         perror("Too long output");
-        sem_close(semaphore);
         exit(1);
     }
 
@@ -23,8 +18,6 @@ void syncWithMemory(std::ostringstream &oss, SharedData* shared1, sem_t* semapho
     shared1->size = length;
     shared1->done = true;
     msync(shared1, sizeof(SharedData), MS_SYNC);
-
-    sem_post(semaphore);
 }
 
 int main() {
@@ -32,13 +25,6 @@ int main() {
     SharedData* shared1 = (SharedData*)mmap(nullptr, sizeof(SharedData),
                                             PROT_READ | PROT_WRITE,
                                             MAP_SHARED, fd1, 0);
-
-    sem_t* semaphore = sem_open(SEMAPHORE_NAME, O_RDWR);
-    if (semaphore == SEM_FAILED)
-    {
-        std::cerr << "Ошибка открытия семафора" << std::endl;
-        exit(1);
-    }
 
     std::ostringstream oss;
 
@@ -51,8 +37,7 @@ int main() {
             float divider;
             std::cin >> divider;
             if (divider == 0) {
-                syncWithMemory(oss, shared1, semaphore);
-                sem_close(semaphore);
+                syncWithMemory(oss, shared1);
                 return 1;
             }
 
@@ -62,7 +47,6 @@ int main() {
         oss << result << "\n";
     }
 
-    syncWithMemory(oss, shared1, semaphore);
-    sem_close(semaphore);
+    syncWithMemory(oss, shared1);
     return 0;
 }
