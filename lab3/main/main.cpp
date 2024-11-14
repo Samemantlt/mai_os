@@ -5,7 +5,6 @@
 #include "common.h"
 #include <cstdlib>
 #include <sys/mman.h>
-#include <semaphore.h>
 
 int createMappedFile(const char* filename) {
     // Создаём файл (перезаписываем)
@@ -26,7 +25,7 @@ int createMappedFile(const char* filename) {
 }
 
 int main() {
-    int fd1 = createMappedFile(MAPPED_FILE1);
+    int fd1 = createMappedFile(MAPPED_FILE_PATH);
 
     SharedData* shared1 = (SharedData*)mmap(nullptr, sizeof(SharedData),
                                             PROT_READ | PROT_WRITE,
@@ -65,6 +64,8 @@ int main() {
         std::cerr << "ERROR: Can't execute child process" << std::endl;
         return 1;
     }
+
+    close(file);
 
     // Родительский процесс ждёт завершение дочернего и выводит содержимое общей памяти в свой стандартный поток вывода.
     int status;

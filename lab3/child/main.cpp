@@ -21,7 +21,7 @@ void syncWithMemory(std::ostringstream &oss, SharedData* shared1) {
 }
 
 int main() {
-    int fd1 = open(MAPPED_FILE1, O_RDWR);
+    int fd1 = open(MAPPED_FILE_PATH, O_RDWR);
     SharedData* shared1 = (SharedData*)mmap(nullptr, sizeof(SharedData),
                                             PROT_READ | PROT_WRITE,
                                             MAP_SHARED, fd1, 0);
