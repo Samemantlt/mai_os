@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "mai_os",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "benchmark::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-benchmark-Debug-75eb2c1894c5a3caee92.json",
+					"name" : "benchmark",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "benchmark_csv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-benchmark_csv-Debug-33addfe42b7614cfdfc4.json",
+					"name" : "benchmark_csv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mai_os::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mai_os-Debug-613d2f1fb1b758c7dad9.json",
+					"name" : "mai_os",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tests::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tests-Debug-35361733eaa78b08aa4e.json",
+					"name" : "tests",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/user/projects/mai_os/lab2/cmake-build-release",
+		"source" : "/home/user/projects/mai_os/lab2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

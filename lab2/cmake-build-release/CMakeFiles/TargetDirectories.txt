@@ -1,0 +1,6 @@
+/home/user/projects/mai_os/lab2/cmake-build-release/CMakeFiles/mai_os.dir
+/home/user/projects/mai_os/lab2/cmake-build-release/CMakeFiles/tests.dir
+/home/user/projects/mai_os/lab2/cmake-build-release/CMakeFiles/benchmark.dir
+/home/user/projects/mai_os/lab2/cmake-build-release/CMakeFiles/benchmark_csv.dir
+/home/user/projects/mai_os/lab2/cmake-build-release/CMakeFiles/edit_cache.dir
+/home/user/projects/mai_os/lab2/cmake-build-release/CMakeFiles/rebuild_cache.dir

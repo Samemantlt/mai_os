@@ -1,0 +1,11 @@
+# ninja log v6
+593	715	1731589429738156794	mai_os	a92db2c93d0fcfde
+10	593	1731589429158156784	CMakeFiles/mai_os.dir/main/main.cpp.o	5d33f7124bdc96ed
+486	606	1731527614075659748	benchmark_csv	17edec92c8a4353a
+6	50	1731589950978161551	build.ninja	b682c9fc1a8cf0d5
+0	305	1731525500176060319	CMakeFiles/tests.dir/main/sort.cpp.o	ab02dab8fdfabdcc
+9	541	1731589429158156784	CMakeFiles/mai_os.dir/main/sort.cpp.o	5cb7f59f5fcf8a41
+1	372	1731525500176060319	CMakeFiles/tests.dir/main/tests.cpp.o	4a9ea73f226b9190
+372	468	1731525500546060246	tests	eb4c248684d28129
+1	327	1731527169225743837	CMakeFiles/benchmark_csv.dir/main/sort.cpp.o	a02fe2e9f68d3724
+1	486	1731527613595659837	CMakeFiles/benchmark_csv.dir/main/benchmark_csv.cpp.o	6f478d433ce2a2df
