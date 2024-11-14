@@ -1,5 +1,3 @@
-#pragma once
-
 #include "sort.h"
 
 void printVector(std::vector<int> &vector) {
@@ -10,12 +8,14 @@ void printVector(std::vector<int> &vector) {
     std::cout << " }";
 }
 
-void sortTestIteration(int count, int tries, int powerOfParallelism) {
+void sortTestIteration(int count, int tries, int threads) {
+    ThreadsLimiter threadsLimiter(threads);
+
     for (int tryIndex = 0; tryIndex < tries; tryIndex++) {
         std::vector<int> array = createRandomValuesVector(count);
 
         std::vector<int> oeSorted = array;
-        oddEvenMergeSort(oeSorted, 0, oeSorted.size(), powerOfParallelism);
+        oddEvenMergeSort(oeSorted, 0, oeSorted.size(), threadsLimiter);
 
         std::vector<int> defaultSorted = array;
         std::sort(defaultSorted.begin(), defaultSorted.end());
@@ -37,9 +37,9 @@ void sortTestIteration(int count, int tries, int powerOfParallelism) {
 }
 
 int main() {
-    for (int powerOfParallelism = 1; powerOfParallelism < 10; powerOfParallelism++) {
+    for (int threads = 1; threads <= 64; threads++) {
         for (int i = 1; i <= 16; i *= 2) {
-            sortTestIteration(i, 100, powerOfParallelism);
+            sortTestIteration(i, 100, threads);
         }
     }
 

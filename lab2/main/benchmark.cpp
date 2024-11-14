@@ -6,13 +6,15 @@
 
 #include "sort.h"
 
-void benchmarkSortIteration(std::vector<int>& originalArray, int powerOfParallelism) {
+void benchmarkSortIteration(std::vector<int>& originalArray, int threads) {
+    ThreadsLimiter threadsLimiter(threads);
+
     std::vector<int> sorted = originalArray;
-    oddEvenMergeSort(sorted, 0, sorted.size(), powerOfParallelism);
+    oddEvenMergeSort(sorted, 0, sorted.size(), threadsLimiter);
 }
 
-void benchmarkSort(std::vector<int>& originalArray, int powerOfParallelism, int times) {
-    benchmarkSortIteration(originalArray, powerOfParallelism);
+void benchmarkSort(std::vector<int>& originalArray, int threads, int times) {
+    benchmarkSortIteration(originalArray, threads);
 
     std::chrono::duration<double> sum{};
     std::chrono::duration<double> min = std::chrono::duration<double>::max();
@@ -20,7 +22,7 @@ void benchmarkSort(std::vector<int>& originalArray, int powerOfParallelism, int 
 
     for (int i = 0; i < times; i++) {
         auto start = std::chrono::high_resolution_clock::now();
-        benchmarkSortIteration(originalArray, powerOfParallelism);
+        benchmarkSortIteration(originalArray, threads);
         auto end = std::chrono::high_resolution_clock::now();
 
         std::chrono::duration<double> duration = end - start;
@@ -31,12 +33,12 @@ void benchmarkSort(std::vector<int>& originalArray, int powerOfParallelism, int 
             max = duration;
     }
 
-    std::cout << "Threads: " << (1 << (powerOfParallelism - 1)) << "\tTimes: " << times << "\tAvg: " << (sum / times).count() << "\tMin: "<< min.count() << "\tMax: " << max.count() << "\n";
+    std::cout << "Threads: " << threads << "\tTimes: " << times << "\tAvg: " << (sum / times).count() << "\tMin: "<< min.count() << "\tMax: " << max.count() << "\n";
 }
 
 int main() {
     std::vector<int> originalArray = createRandomValuesVector(1024 * 16);
 
-    for (int powerOfParallelism = 1; powerOfParallelism <= 12; powerOfParallelism++)
-        benchmarkSort(originalArray, powerOfParallelism, 512);
+    for (int threads = 1; threads <= 64; threads++)
+        benchmarkSort(originalArray, threads, 512);
 }

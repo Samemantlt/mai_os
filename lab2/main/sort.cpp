@@ -2,32 +2,33 @@
 
 void *parallelSort(void *u_arg) {
     auto *arg = static_cast<ParallelSortArg *>(u_arg);
-    oddEvenMergeSort(*arg->vector, arg->left, arg->right, arg->powerOfParallelism);
+    oddEvenMergeSort(arg->vector, arg->left, arg->right, arg->threadsLimiter);
+    arg->threadsLimiter.releaseThread();
     return nullptr;
 }
 
-void oddEvenMergeSort(std::vector<int> &a, int startIndex, int length, int powerOfParallelism = 0) {
+void oddEvenMergeSort(std::vector<int> &a, int startIndex, int length, ThreadsLimiter& threadsLimiter) {
     if (length <= 1)
         return;
 
     int halfLength = length / 2;
 
-    if (powerOfParallelism > 0) {
+    if (threadsLimiter.lockThread()) {
         ParallelSortArg parallelArg{
-                &a,
+                a,
                 startIndex,
                 halfLength,
-                powerOfParallelism - 1
+                threadsLimiter
         };
 
         pthread_t thread;
         pthread_create(&thread, nullptr, parallelSort, &parallelArg);
 
-        oddEvenMergeSort(a, startIndex + halfLength, halfLength, powerOfParallelism - 1);
+        oddEvenMergeSort(a, startIndex + halfLength, halfLength, threadsLimiter);
         pthread_join(thread, nullptr);
     } else {
-        oddEvenMergeSort(a, startIndex, halfLength);
-        oddEvenMergeSort(a, startIndex + halfLength, halfLength);
+        oddEvenMergeSort(a, startIndex, halfLength, threadsLimiter);
+        oddEvenMergeSort(a, startIndex + halfLength, halfLength, threadsLimiter);
     }
 
     oddEvenMerge(a, startIndex, length, 1);
@@ -58,4 +59,35 @@ std::vector<int> createRandomValuesVector(size_t size) {
         array[i] = std::rand() % 1024;
     }
     return array;
+}
+
+bool ThreadsLimiter::lockThread() {
+    bool result = false;
+
+    pthread_mutex_lock(&mutex);
+    if (currentCount < maxCount) {
+        currentCount++;
+        result = true;
+    }
+    pthread_mutex_unlock(&mutex);
+
+    return result;
+}
+
+void ThreadsLimiter::releaseThread() {
+    pthread_mutex_lock(&mutex);
+    currentCount--;
+    pthread_mutex_unlock(&mutex);
+}
+
+ThreadsLimiter::ThreadsLimiter(int maxCount) : maxCount(maxCount) {
+    pthread_mutex_init(&mutex, nullptr);
+}
+
+ThreadsLimiter::~ThreadsLimiter() {
+    if (disposed)
+        return;
+
+    pthread_mutex_destroy(&mutex);
+    disposed = true;
 }
