@@ -1,0 +1,4 @@
+/home/user/projects/mai_os/lab3/cmake-build-release/CMakeFiles/mai_os.dir
+/home/user/projects/mai_os/lab3/cmake-build-release/CMakeFiles/child.dir
+/home/user/projects/mai_os/lab3/cmake-build-release/CMakeFiles/edit_cache.dir
+/home/user/projects/mai_os/lab3/cmake-build-release/CMakeFiles/rebuild_cache.dir
