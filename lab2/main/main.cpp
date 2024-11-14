@@ -19,25 +19,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Кол-во потоков должно быть степенью 2
-    if ((threads & (threads - 1)) != 0) {
-        std::cerr << "Threads count must be a power of 2\n";
-        return 1;
-    }
-
-    int powerOfParallelism = 1;
-    while (1 << powerOfParallelism != threads)
-        powerOfParallelism++;
-
     std::vector<int> originalArray = createRandomValuesVector(arraySize);
     std::vector<int> oeSorted = originalArray;
 
     std::cout << "Starting sorting array with length: " << arraySize << "\n";
     std::cout << "Max threads: " << threads << std::endl;
 
+    ThreadsLimiter threadsLimiter(threads);
+
     auto start = std::chrono::high_resolution_clock::now();
 
-    oddEvenMergeSort(oeSorted, 0, oeSorted.size(), powerOfParallelism);
+    oddEvenMergeSort(oeSorted, 0, oeSorted.size(), threadsLimiter);
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
