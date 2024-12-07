@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "mai_os",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "LibImpl1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-LibImpl1-Debug-b274757944414e994132.json",
+					"name" : "LibImpl1",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "LibImpl2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-LibImpl2-Debug-b82d9bba9581d9d5ca2c.json",
+					"name" : "LibImpl2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Program1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Program1-Debug-4845d7973400c965b623.json",
+					"name" : "Program1",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Program2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Program2-Debug-a74b9408b78eabcbc3a1.json",
+					"name" : "Program2",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/user/projects/mai_os/lab4/cmake-build-release",
+		"source" : "/home/user/projects/mai_os/lab4"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

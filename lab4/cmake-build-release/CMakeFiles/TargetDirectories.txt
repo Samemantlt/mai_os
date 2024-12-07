@@ -1,0 +1,6 @@
+/home/user/projects/mai_os/lab4/cmake-build-release/CMakeFiles/LibImpl1.dir
+/home/user/projects/mai_os/lab4/cmake-build-release/CMakeFiles/LibImpl2.dir
+/home/user/projects/mai_os/lab4/cmake-build-release/CMakeFiles/Program1.dir
+/home/user/projects/mai_os/lab4/cmake-build-release/CMakeFiles/Program2.dir
+/home/user/projects/mai_os/lab4/cmake-build-release/CMakeFiles/edit_cache.dir
+/home/user/projects/mai_os/lab4/cmake-build-release/CMakeFiles/rebuild_cache.dir
