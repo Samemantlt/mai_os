@@ -146,7 +146,7 @@ int main() {
     while (true) {
         swarm.receive_step();
         swarm.timeout_step();
-        swarm.heartbeats_step();
+        swarm.heartbeat_step();
 
         if (!input_available()) {
             usleep(10 * 1000);

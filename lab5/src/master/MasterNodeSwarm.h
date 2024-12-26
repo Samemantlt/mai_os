@@ -9,6 +9,7 @@ public:
     int heartbeat_time = 1000; // ms
 
     std::unordered_map<int, std::chrono::time_point<std::chrono::system_clock>> heartbeats;
+    std::unordered_map<int, bool> heartbeats_printed;
     bool is_available(int slave_id) {
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - heartbeats[slave_id]).count();
         return ms < 4 * heartbeat_time;
@@ -33,6 +34,7 @@ public:
 
     void handle_pong(PingResponse &response) override {
         heartbeats[response.slave_id] = std::chrono::system_clock::now();
+        heartbeats_printed[response.slave_id] = false;
     }
 
     void handle(SumNumbersResponse &response) override {
@@ -43,7 +45,11 @@ public:
         std::cout << response.message << std::endl;
     }
 
-    void heartbeats_step() {
+    void handle(CreateNodeRequest &request) override {
+        NodeSwarm::handle(request);
+
+        heartbeats[request.id] = std::chrono::system_clock::now();
+        heartbeats_printed[request.id] = false;
     }
 
     void handle_timeout(int slave_id) override {
@@ -55,6 +61,18 @@ public:
             std::cout << slave_id << ": " << error.substr(6) << std::endl;
         } else {
             std::cout << "Error:" << slave_id << ": " << error << std::endl;
+        }
+    }
+
+    void heartbeat_step() {
+        for (auto id : this->all_ids) {
+            if (id == -1)
+                continue;
+
+            if (!heartbeats_printed[id] && !is_available(id)) {
+                std::cout << "Heartbeat: node " << id << " is unavailable now" << std::endl;
+                heartbeats_printed[id] = true;
+            }
         }
     }
 };
