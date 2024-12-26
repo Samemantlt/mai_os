@@ -14,16 +14,19 @@ void messaging::send_message(Node *node, Message &message) {
 }
 
 Message *messaging::receive_message(Node *node) {
-    zmq_msg_t request;
-    zmq_msg_init(&request);
-    auto size = zmq_msg_recv(&request, node->socket, ZMQ_DONTWAIT);
-    if (size == -1)
+    zmq_msg_t zmq_msg;
+    zmq_msg_init(&zmq_msg);
+    auto size = zmq_msg_recv(&zmq_msg, node->socket, ZMQ_DONTWAIT);
+    if (size == -1) {
+        zmq_msg_close(&zmq_msg);
         return nullptr;
+    }
 
     std::vector<char> buffer(size + 1);
     buffer[size] = '\0';
 
-    std::memcpy(&buffer[0], zmq_msg_data(&request), size);
+    std::memcpy(&buffer[0], zmq_msg_data(&zmq_msg), size);
+    zmq_msg_close(&zmq_msg);
 
     std::string str(&buffer[0]);
     std::istringstream stream(str);
