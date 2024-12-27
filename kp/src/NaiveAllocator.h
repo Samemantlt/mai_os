@@ -5,6 +5,7 @@
 #include <map>
 #include <unordered_map>
 #include <list>
+#include <sys/mman.h>
 #include "AllocatorBase.h"
 
 const int alignment = alignof(std::max_align_t);
@@ -21,11 +22,11 @@ public:
         bool is_free;
     };
 
-    std::vector<Block> blocks;
+    std::vector<Block> blocks{};
 
     NaiveAllocator(char* memory, size_t size) : AllocatorBase(size), memory(memory), top_memory(memory) {}
     ~NaiveAllocator() override {
-        std::free(memory);
+        munmap(static_cast<void*>(memory), size);
     }
 
     void * alloc(size_t block_size) override {
@@ -83,21 +84,25 @@ public:
     }
 
     ~BinaryAllocator() override {
-        std::free(memory);
+        munmap(static_cast<void*>(memory), size);
     }
 
     void * alloc(size_t block_size) override {
         block_size = (block_size / alignment + 1) * alignment;
 
-        auto& blocks = free_blocks[1 << bits(block_size)];
-        if (blocks.empty())
-            return alloc_new(block_size);
+        for (int i = 1 << bits(block_size); i <= size; i <<= 1) {
+            auto& blocks = free_blocks[i];
+            if (blocks.empty())
+                continue;
 
-        auto block = blocks.back();
+            auto block = blocks.back();
 
-        used[block.ptr] = block;
-        blocks.pop_back();
-        return block.ptr;
+            used[block.ptr] = block;
+            blocks.pop_back();
+            return block.ptr;
+        }
+
+        return alloc_new(block_size);
     }
 
     void* alloc_new(size_t block_size) {

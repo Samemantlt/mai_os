@@ -1,0 +1,6 @@
+# ninja log v6
+3	1052	1735239966384179550	CMakeFiles/master.dir/src/master/MasterNodeSwarm.cpp.o	cd4fe7a6d3b844e3
+1	867	1735239883131587145	CMakeFiles/common.dir/src/common/Node.cpp.o	2c9c0971a6c5adf9
+0	17	1735241592043513458	build.ninja	918c4a08b8ea622
+949	977	1735239884071588841	libcommon.a	94c19c6a3bbacb86
+2	1262	1735239966384179550	CMakeFiles/master.dir/src/master/main.cpp.o	7f656ffbfa88bc3a

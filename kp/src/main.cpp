@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sys/mman.h>
 #include "NaiveAllocator.h"
 #include "tests/random_buffers_tests.h"
 #include "tests/iterative_buffers_tests.h"
@@ -11,7 +12,8 @@ void print_result(Result result, AllocatorBase& allocator) {
 
 template<class T>
 AllocatorBase* create(size_t size) {
-    char* memory = static_cast<char*>(malloc(size));
+    void* mem = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    char* memory = static_cast<char*>(mem);
     auto a = new T(memory, size);
     // fulfill_and_release(*a);
     return a;
@@ -22,13 +24,21 @@ void fulfill_and_release(AllocatorBase& allocator) {
     const int max_size = 100'000;
 
     std::vector<void*> blocks;
-
+    /*
     srand(1);
     while (true) {
-        auto b = allocator.alloc(rand() % max_size);
+        auto b = allocator.alloc(1 << (rand() % max_size));
         if (b == nullptr)
             break;
         blocks.push_back(b);
+    }*/
+
+    for (int i = 0; i < max_size; i++) {
+        auto buf = allocator.alloc(i);
+        if (buf == nullptr)
+            break;
+
+        blocks.push_back(buf);
     }
 
     for (auto& b : blocks) {
